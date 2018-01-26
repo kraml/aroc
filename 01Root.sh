@@ -122,22 +122,17 @@ echo
 # For arm, the unsquashed image needs to be at least~ 1GB (~800MB for Marshmallow).
 # For x86, the unsquashed image needs to be at least ~1.4GB (~1GB for Marshmallow).
 
-if [ $ANDROID_ARCH=armv7 ]; then
+if [ "$ANDROID_ARCH" = armv7 ]; then
   cd /usr/local/Android_Images
   dd if=/dev/zero of=system.raw.expanded.img count=1060000 bs=1024 status=progress
-  else
-  
-  if [ $ANDROID_ARCH=x86 ]; then
+elif [ "$ANDROID_ARCH" = x86 ]; then
     cd /usr/local/Android_Images
     dd if=/dev/zero of=system.raw.expanded.img count=1424000 bs=1024 status=progress
-  
-    else
+else
     echo "Error!"
     echo "Unable to detect correct architecture!"
     echo
     exit 1
-  fi
-
 fi
 echo
 echo "Formatting system.raw.expanded.img as ext4 filesystem"
@@ -156,20 +151,16 @@ echo "Downloading BusyBox"
 mkdir -p /tmp/aroc
 cd /tmp/aroc
 
-if [ $ANDROID_ARCH=armv7 ]; then
+if [ "$ANDROID_ARCH" = armv7 ]; then
   wget https://busybox.net/downloads/binaries/1.26.2-defconfig-multiarch/busybox-armv6l -O busybox
-  else
-  
-  if [ ANDROID_ARCH=x86 ]; then
+elif [ "$ANDROID_ARCH" = x86 ]; then
     wget https://busybox.net/downloads/binaries/1.26.2-defconfig-multiarch/busybox-x86_64 -O busybox
-    else
+else
     echo "Error!"
     echo "Unable to detect correct architecture!"
     echo
     exit 1
     echo
-  fi
-  
 fi
 
 echo "Moving BusyBox to /usr/local/bin"
