@@ -171,27 +171,29 @@ chmod a+x /usr/local/bin/busybox
 }
 
 download_supersu() {
+supersu_url="https://download.chainfire.eu/1220/SuperSU/SR5-SuperSU-v2.82-SR5-20171001224502.zip?retrieve_file=1"
+supersu_correct_size=6882992
 
-echo "Downloading SuperSU-v2.82-SR3"
+echo "Downloading SuperSU-v2.82-SR5"
 mkdir -p /tmp/aroc
 cd /tmp/aroc
-wget https://download.chainfire.eu/1122/SuperSU/SR3-SuperSU-v2.82-SR3-20170813133244.zip?retrieve_file=1 -O SuperSU.zip
+wget "$supersu_url" -O SuperSU.zip
 
 # Check filesize
 supersu_size=$(stat -c %s /tmp/aroc/SuperSU.zip)
 
-if [ $supersu_size = 6918737 ]; then
+if [ "$supersu_size" = "$supersu_correct_size" ]; then
   echo "Unzipping SuperSU zip, and copying required directories to ~/Downloads."
   /usr/local/bin/busybox unzip SuperSU.zip
   else
   echo "Unexpected file size. Trying again..."
-  wget https://download.chainfire.eu/1122/SuperSU/SR3-SuperSU-v2.82-SR3-20170813133244.zip?retrieve_file=1 -O SuperSU.zip
+  wget "$supersu_url" -O SuperSU.zip
 fi
 
 # Check filesize again...
 supersu_size=$(stat -c %s /tmp/aroc/SuperSU.zip)
 
-if [ $supersu_size = 6918737 ]; then
+if [ "$supersu_size" = "$supersu_correct_size" ]; then
   echo "Unzipping SuperSU zip, and copying required directories to ~/Downloads."
   /usr/local/bin/busybox unzip SuperSU.zip
   else
@@ -203,20 +205,16 @@ fi
 
 cp -r -a common /home/chronos/user/Downloads
   
-if [ $ANDROID_ARCH=armv7 ]; then
+if [ "$ANDROID_ARCH" = armv7 ]; then
   cp -r -a armv7 /home/chronos/user/Downloads
-  else
-    
-  if [ $ANDROID_ARCH=x86 ]; then
+elif [ "$ANDROID_ARCH" = x86 ]; then
     cp -r -a x86 /home/chronos/user/Downloads
-    else
+else
     echo "Error!"
     echo "Unable to detect correct architecture!"
     echo
     exit 1
     echo
-  fi
-  
 fi
 
 }
